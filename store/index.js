@@ -29,5 +29,21 @@ export const mutations = {
       } catch (error) {
         console.error(error);
       }
+    },
+    async deleteContact({ commit, dispatch}, id ) {
+       try {
+
+           const url = `https://64cf6ca4ffcda80aff51d62f.mockapi.io/phone/${id}`
+
+           await axios(url, {
+               method: 'DELETE'
+           })
+
+       } catch(e) {
+           console.log(e)
+       } finally {
+          dispatch('fetchTasks');
+           alert('Deleted user by id - ' + id)
+       }
     }
   };

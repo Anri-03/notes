@@ -7,7 +7,9 @@
         <button @click="addTask" class="btn-task">new task</button>
       </div>
       <ul class="todo-list">
-        <li v-for="task in tasks" :key="task.id">{{ task.text }}</li>
+        <li v-for="task in tasks" :key="task.id">{{ task.text }}
+          <button class="delete" @click="deleteContact(task.id)">x</button>
+        </li>
       </ul>
     </div>
   </div>
@@ -29,6 +31,9 @@ export default {
     this.$store.dispatch('fetchTasks');
   },
   methods: {
+    deleteContact(id) {
+    this.$store.dispatch('deleteContact', id);
+   },
     addTask() {
       if (this.newTaskText.trim() === '') return;
 
