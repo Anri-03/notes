@@ -16,7 +16,7 @@ export const mutations = {
   export const actions = {
     async fetchTasks({ commit }) {
       try {
-        const response = await axios.get('https://your-api-url/tasks');
+        const response = await axios.get('https://64cf6ca4ffcda80aff51d62f.mockapi.io/todoTask');
         commit('setTasks', response.data);
       } catch (error) {
         console.error(error);
@@ -24,7 +24,7 @@ export const mutations = {
     },
     async createTask({ commit }, taskData) {
       try {
-        const response = await axios.post('https://your-api-url/tasks', taskData);
+        const response = await axios.post('https://64cf6ca4ffcda80aff51d62f.mockapi.io/todoTask', taskData);
         commit('addTask', response.data);
       } catch (error) {
         console.error(error);
