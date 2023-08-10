@@ -1,21 +1,47 @@
 <template>
   <div class="container">
     <div class="main-box">
-      <h1 class="title"> Дневник Дел</h1>
-        <div class="add-task">
-          <input type="text" placeholder="Введите текст...">
-          <button @click="addTask">"btn-task">new task</button>>
-        </div>
+      <h1 class="title">Дневник Дел</h1>
+      <div class="add-task">
+        <input v-model="newTaskText" type="text" placeholder="Введите текст...">
+        <button @click="addTask" class="btn-task">new task</button>
+      </div>
+      <ul class="todo-list">
+        <li v-for="task in tasks" :key="task.id">{{ task.text }}</li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'NuxtTutorial',
-  computed: {}
-}
+  computed: {
+    tasks() {
+      return this.$store.state.tasks;
+    }
+  },
+  data() {
+    return {
+      newTaskText: ''
+    };
+  },
+  mounted() {
+    this.$store.dispatch('fetchTasks');
+  },
+  methods: {
+    addTask() {
+      if (this.newTaskText.trim() === '') return;
+
+      this.$store.dispatch('createTask', {
+        text: this.newTaskText
+      });
+
+      this.newTaskText = '';
+    }
+  }
+};
 </script>
+
 
 <style>
 .title {
