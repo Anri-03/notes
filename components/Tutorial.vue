@@ -5,16 +5,23 @@
       <div class="add-task">
         <input v-model="newTaskText" type="text" placeholder="Введите текст...">
         <button @click="addTask" class="btn-task">new task</button>
+        <button @click="deleteallTask" class="btn-dall">delete all</button>
       </div>
       <ul class="todo-list">
-        <li v-for="task in tasks" :key="task.id">{{ task.text }}
-          <button class="delete" @click="deleteContact(task.id)">x</button>
-        </li>
-      </ul>
+      <li v-for="task in tasks" :key="task.id">
+       {{ task.text }} (Создано: {{ task.createTime }}) 
+       <button class="delete" @click="deleteContact(task.id)">x</button>
+       <div>
+       <button @click="editClick(task)"> {{ edit ? 'сохранить' : 'редактировать' }}</button>
+       <div class="edit-inputs" v-if="edit">
+        <input v-model="editTask" type="text" />
+      </div>
+    </div>
+  </li>
+</ul>
     </div>
   </div>
-</template>
-
+</template> 
 <script>
 export default {
   computed: {
@@ -24,6 +31,8 @@ export default {
   },
   data() {
     return {
+      edit: false, 
+      editTask: '', 
       newTaskText: ''
     };
   },
@@ -31,14 +40,25 @@ export default {
     this.$store.dispatch('fetchTasks');
   },
   methods: {
+    async deleteallTask() {
+      await this.$store.dispatch('deleteAllTask');
+    },
+    editClick(id) { 
+    this.editTask = '';
+    this.edit = !this.edit; 
+    this.editTask = id.text;
+    },
     deleteContact(id) {
-    this.$store.dispatch('deleteContact', id);
-   },
+      this.$store.dispatch('deleteContact', id);
+    },
     addTask() {
       if (this.newTaskText.trim() === '') return;
 
+      const currentTime = new Date().toISOString();
+
       this.$store.dispatch('createTask', {
-        text: this.newTaskText
+        text: this.newTaskText,
+        createTime: currentTime 
       });
 
       this.newTaskText = '';
@@ -49,8 +69,17 @@ export default {
 
 
 <style>
-.title {
-  margin-top: -500px;
+.task-text {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.task-time {
+  color: #888;
+}
+
+.todo-list {
+  margin-top: 20px
 }
 .container {
   display: flex;
@@ -70,8 +99,16 @@ export default {
   border-radius: 6px;
 }
 
-.todo-list {
-  margin-top: 20px;
+  .todo-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+  width: 800px;
 }
 
 .add-task {
@@ -93,5 +130,18 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+.delete:hover {
+  background-color: #ff6b6b;
+}
+.btn-dall {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-dall:hover {
+  background-color: #ff6b6b;
 }
 </style>
